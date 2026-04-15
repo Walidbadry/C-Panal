@@ -4,8 +4,18 @@
 
 ```
 /home/username/app/
+
+├── dev/                              # 🟢 Development Environment
+│   ├── releases/
+│   │   └── local_build/
+│   ├── shared/
+│   │   ├── .env
+│   │   └── storage/
+│   ├── current -> releases/local_build
+│   └── scripts/
+│       └── run.sh
 │
-├── prod/                              # 🔵 Production Environment
+├── staging/                          # 🟡 Staging Environment
 │   ├── releases/
 │   │   ├── 20260415_1200/
 │   │   ├── 20260415_1300/
@@ -23,34 +33,39 @@
 │       ├── deploy.sh
 │       └── rollback.sh
 │
-│
-├── staging/                           # 🟡 Staging Environment
+├── prod/                             # 🔵 Production Environment
 │   ├── releases/
 │   │   ├── 20260415_1200/
-│   │   └── 20260415_1300/
+│   │   ├── 20260415_1300/
+│   │   └── 20260415_1400/
 │   │
 │   ├── shared/
 │   │   ├── .env
 │   │   └── storage/
+│   │       ├── logs/
+│   │       ├── cache/
+│   │       ├── sessions/
+│   │       └── uploads/
 │   │
-│   ├── current -> releases/20260415_1300
+│   ├── current -> releases/20260415_1400
 │   └── scripts/
 │       ├── deploy.sh
-│       └── rollback.sh
+│       ├── rollback.sh
+│       └── healthcheck.sh
 │
 │
-├── dev/                               # 🟢 Development Environment (optional)
-│   ├── releases/
-│   │   └── local_build/
-│   │
-│   ├── shared/
-│   │   ├── .env
-│   │   └── storage/
-│   │
-│   ├── current -> releases/local_build
-│   └── scripts/
-│       └── run.sh
+├── public_html/                      # 🌐 Web Entry Point (Production)
+│   ├── index.php
+│   ├── .htaccess
 │
+├── staging.example.com/              # 🌐 Staging Web Root
+│   ├── index.php
+│   ├── .htaccess
+│
+├── shared_global/                    # 🧠 Optional Global Shared (Advanced)
+│   ├── backups/
+│   ├── logs/
+│   └── ci-cache/
 │
 └── README.md
 
