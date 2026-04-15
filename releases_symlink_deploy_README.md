@@ -98,7 +98,7 @@ deploymint.sh
 6. Optimize Laravel
 7. Switch current (symlink)
 ```
-```
+```sh
 #!/bin/bash
 
 DATE=$(date +"%Y%m%d_%H%M%S")
