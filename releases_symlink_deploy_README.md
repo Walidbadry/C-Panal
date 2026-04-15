@@ -57,7 +57,21 @@
 ```
 
 ---
-
+```
+User Browser
+   ↓
+public_html/index.php
+   ↓
+current symlink
+   ↓
+releases/20260415_1600
+   ↓
+Laravel app boots
+   ↓
+Controller runs
+   ↓
+Response يرجع
+```
 ## 💡 Concept
 
 * Each deployment creates a **new release folder**
