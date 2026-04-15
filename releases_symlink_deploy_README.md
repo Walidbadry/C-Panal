@@ -89,7 +89,7 @@ Response يرجع
 ```
 ## ⚙️ DEPLOY.SH WORKFLOW
 deploymint.sh
-```
+```php
 1. Create new release folder
 2. Clone project
 3. Install dependencies
