@@ -87,6 +87,53 @@ Controller runs
    ↓
 Response يرجع
 ```
+## ⚙️ DEPLOY.SH WORKFLOW
+deploymint.sh
+```
+1. Create new release folder
+2. Clone project
+3. Install dependencies
+4. Link shared files
+5. Run migrations
+6. Optimize Laravel
+7. Switch current (symlink)
+```
+```
+#!/bin/bash
+
+DATE=$(date +"%Y%m%d_%H%M%S")
+
+APP_DIR="/home/username/app/prod"
+RELEASE_DIR="$APP_DIR/releases/$DATE"
+
+echo "🚀 Creating new release: $DATE"
+
+mkdir -p $RELEASE_DIR
+cd $RELEASE_DIR
+
+echo "📥 Cloning project..."
+git clone https://github.com/your-repo.git .
+
+echo "🔗 Linking shared files..."
+ln -s $APP_DIR/shared/.env .env
+ln -s $APP_DIR/shared/storage storage
+
+echo "📦 Installing dependencies..."
+composer install --no-dev --optimize-autoloader
+
+echo "⚙️ Running migrations..."
+php artisan migrate --force
+
+echo "⚡ Optimizing Laravel..."
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+
+echo "🔄 Switching release..."
+ln -sfn $RELEASE_DIR $APP_DIR/current
+
+echo "✅ Deployment finished successfully!"
+```
 ## 💡 Concept
 
 * Each deployment creates a **new release folder**
