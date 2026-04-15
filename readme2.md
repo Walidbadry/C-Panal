@@ -102,6 +102,21 @@ $appPath = __DIR__ . "/../versions/{$version}";
 
 $envFile = __DIR__ . "/../shared/.env.{$env}";
 $storagePath = __DIR__ . "/../shared/storage";
+
+
+require $appPath . '/vendor/autoload.php';
+$app = require_once $appPath . '/bootstrap/app.php';
+$app->useEnvironmentPath(dirname($envFile));
+$app->loadEnvironmentFrom(basename($envFile));
+$app->useStoragePath($storagePath);
+
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
+
+$response = $kernel->handle(
+    $request = Illuminate\Http\Request::capture()
+)->send();
+
+$kernel->terminate($request, $response);
 ```
 
 ---
