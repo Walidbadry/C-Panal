@@ -1,17 +1,8 @@
-# 🚀 Deploy Strategy: Releases + Symlink (Zero Downtime)
-
-## 📌 Overview
-
-This project uses a production-grade deployment strategy inspired by real-world DevOps systems.
-
-Instead of overwriting the same codebase, every deployment creates a **new release**, and the active version is switched using a **symbolic link (symlink)** called `current`.
-
-This allows **zero downtime deployments**, fast rollback, and clean architecture.
-
----
+# 🚀 Deployment Strategy: Releases + Symlink
 
 ## 📁 Project Structure
 
+```
 app/
 ├── releases/
 │   ├── 20260415_1200/
@@ -21,82 +12,154 @@ app/
 │   ├── .env
 │   ├── storage/
 │   │   ├── logs/
-│   │   ├── framework/
-│   │   └── uploads/
+│   │   ├── uploads/
+│   │   └── cache/
 │
 ├── current -> releases/20260415_1300
+```
 
 ---
 
-## 🧠 Core Idea
+## 💡 Concept
 
-- Each deploy = new folder inside `releases/`
-- `current` always points to the active version
-- Shared data (env, storage) stays persistent
-- Switching versions = changing symlink only
+* Each deployment creates a **new release folder**
+* The application runs from a symlink called:
+
+```
+current/
+```
+
+* This symlink always points to the **latest stable release**
 
 ---
 
 ## ⚙️ Deployment Flow
 
-### 1. Create new release
-releases/20260415_1400/
+### 1. Create New Release
+
+```
+cd app/releases
+mkdir 20260415_1400
+cd 20260415_1400
+```
 
 ---
 
-### 2. Clone or upload code
-git clone <repo> releases/20260415_1400
+### 2. Pull Code
+
+```
+git clone <repo_url> .
+# or
+git pull origin main
+```
 
 ---
 
-### 3. Install dependencies
-composer install
+### 3. Install Dependencies
+
+#### PHP (Laravel)
+
+```
+composer install --no-dev --optimize-autoloader
+```
+
+#### Node.js
+
+```
 npm install
+npm run build
+```
 
 ---
 
-### 4. Link shared files
-ln -s shared/.env releases/20260415_1400/.env
-ln -s shared/storage releases/20260415_1400/storage
+### 4. Link Shared Resources
+
+```
+ln -s ../../shared/.env .env
+rm -rf storage
+ln -s ../../shared/storage storage
+```
 
 ---
 
-### 5. Run migrations
+### 5. Run Migrations
+
+```
 php artisan migrate --force
+```
 
 ---
 
-### 6. Activate new version (zero downtime)
+### 6. Switch to New Release (Zero Downtime)
+
+```
 ln -sfn releases/20260415_1400 current
+```
 
 ---
 
-## 🔁 Rollback (Instant)
+## 🔄 Rollback
 
-ln -sfn releases/20260415_1200 current
+To revert to a previous release:
+
+```
+ln -sfn releases/20260415_1300 current
+```
 
 ---
 
 ## ✅ Advantages
 
-- Zero downtime deployments
-- Instant rollback
-- Clean architecture
-- CI/CD friendly
-- Production-grade structure
+* 🚀 Zero downtime deployment
+* 🔄 Instant rollback
+* 🧼 Clean architecture
+* 🤖 CI/CD friendly
+* 💼 Production standard
 
 ---
 
 ## ❌ Disadvantages
 
-- Requires SSH access
-- Slightly complex at first
-- Requires symlink understanding
+* Requires SSH access
+* Slightly more complex setup
+* Consumes more disk space
 
 ---
 
-## 🏁 Summary
+## 🧠 Best Practices
 
-- releases = versions
-- shared = persistent data
-- current = active version pointer
+### Keep only last 5 releases
+
+```
+ls -dt releases/* | tail -n +6 | xargs rm -rf
+```
+
+---
+
+### Use clear naming
+
+```
+YYYY-MM-DD_HH-MM
+```
+
+---
+
+### Cache optimization (Laravel)
+
+```
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+---
+
+## 🔥 Summary
+
+This deployment strategy ensures:
+
+* Safe deployments
+* Instant switching
+* Easy rollback
+
+It is widely used in production environments for reliability and scalability.
